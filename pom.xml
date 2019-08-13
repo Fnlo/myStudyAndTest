@@ -64,5 +64,30 @@
 		    <artifactId>jansi</artifactId>
 		    <version>1.17</version>
 		</dependency>
+		
+		
+		<!-- Groovy -->
+		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
+		<dependency>
+		    <groupId>org.codehaus.groovy</groupId>
+		    <artifactId>groovy-all</artifactId>
+		    <version>2.5.7</version>
+		    <type>pom</type>
+		</dependency>
+		
+		<!-- Antlr -->
+		<dependency>
+			<groupId>antlr</groupId>
+			<artifactId>antlr</artifactId>
+			<version>2.7.7</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.antlr/antlr4-runtime -->
+		<dependency>
+		    <groupId>org.antlr</groupId>
+		    <artifactId>antlr4-runtime</artifactId>
+		    <version>4.7.1</version>
+		</dependency>
+
   </dependencies>
 </project>
