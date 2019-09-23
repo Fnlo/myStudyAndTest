@@ -1,7 +1,7 @@
 package Fnlo.QandA;
 
 /**
- * @author 31228
+ * @author Fnlo
  *	实现最小值函数
 	自己设计一个泛型的获取数组最小值的函数.并且这个方法只能接受Number的子类并且实现了Comparable接口。
 	int minInteger = min(new Integer[]{1, 2, 3});//result:1

@@ -37,6 +37,13 @@ public class HandleFile {
                     || (index = line.indexOf(": delete")) > -1
                     || (index = line.indexOf(": select")) > -1) {
                     sql = line.substring(index + 2);
+                    if("select".equalsIgnoreCase(sql.trim())){
+                    	String secLine = br.readLine();
+                    	while(secLine == null || secLine.trim().isEmpty()){
+                    		secLine = br.readLine();
+                    	}
+                    	sql += "\n" + secLine;
+                    }
                 } 
                 if(sql != null) {
                     int indexW = -1;

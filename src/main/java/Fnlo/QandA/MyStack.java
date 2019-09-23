@@ -3,7 +3,7 @@ package Fnlo.QandA;
 import java.util.Arrays;
 
 /**
- * @author 31228
+ * @author Fnlo
  * 使用数组实现栈
 	自己实现一个栈，要求这个栈具有push()、pop()（返回栈顶元素并出栈）、peek() （返回栈顶元素不出栈）、isEmpty()、size()这些基本的方法。
 

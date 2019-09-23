@@ -18,8 +18,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import com.highgo.jdbc.largeobject.LargeObject;
-import com.highgo.jdbc.largeobject.LargeObjectManager;
+//import com.highgo.jdbc.largeobject.LargeObject;
+//import com.highgo.jdbc.largeobject.LargeObjectManager;
 
 
 
@@ -140,6 +140,44 @@ public class Test {
 		String url = "jdbc:postgresql://192.168.1.20:5866,localhost:5866,192.168.10.20:5866/test?loadBalanceHosts=true";
 		String username = "highgo";
 		String password = "highgo123";
+		Connection conn = null;
+		try {
+			Class.forName(driver); // classLoader,加载对应驱动
+			conn = (Connection) DriverManager.getConnection(url, username, password);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
+	
+	public static Connection getConn4() {
+		String driver = "com.highgo.jdbc.Driver";
+		// String url =
+		// "jdbc:postgresql://192.168.1.20:5866,localhost:5866,192.168.10.20:5866/test?loadBalanceHosts=true&targetServerType=slave";
+		String url = "jdbc:highgo://192.168.90.103:5432/wang";
+		String username = "postgres";
+		String password = "postgres";
+		Connection conn = null;
+		try {
+			Class.forName(driver); // classLoader,加载对应驱动
+			conn = (Connection) DriverManager.getConnection(url, username, password);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
+	
+	public static Connection getConn5() {
+		String driver = "com.highgo.jdbc.Driver";
+		// String url =
+		// "jdbc:postgresql://192.168.1.20:5866,localhost:5866,192.168.10.20:5866/test?loadBalanceHosts=true&targetServerType=slave";
+		String url = "jdbc:highgo://192.168.90.102:5432/postgres";
+		String username = "postgres";
+		String password = "postgres";
 		Connection conn = null;
 		try {
 			Class.forName(driver); // classLoader,加载对应驱动
@@ -302,46 +340,46 @@ public class Test {
 		return i;
 	}
 
-	@SuppressWarnings("finally")
-	public int insertlargeobjectwithprovidefunc(testpojo person) {
-		Connection conn = getConn();
-		PreparedStatement pstmt;
-		try {
-			conn.setAutoCommit(false);
-			LargeObjectManager lobj = ((com.highgo.jdbc.PGConnection) conn).getLargeObjectAPI();
-			long oid = lobj.createLO(LargeObjectManager.READ
-					| LargeObjectManager.WRITE);
-			LargeObject obj = lobj.open(oid, LargeObjectManager.WRITE);
-			FileInputStream fis = new FileInputStream("D:/1.txt");
-			byte buf[] = new byte[2048];
-			int s, tl = 0;
-			while ((s = fis.read(buf, 0, 2048)) > 0) {
-				obj.write(buf, 0, s);
-				tl += s;
-			}
-			obj.close();
-			String sql = "insert into largeobjectoid (id,obj) values(?,?)";
-			int i = 0;
-			pstmt = (PreparedStatement) conn.prepareStatement(sql);
-			pstmt.setInt(1, person.getId());
-			pstmt.setLong(2, oid);
-			i = pstmt.executeUpdate();
-			conn.commit();
-			pstmt.close();
-			conn.close();
-			System.out.println("end" + i);
-			return i;
-		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		} finally {
-			return 0;
-		}
-
-	}
+//	@SuppressWarnings("finally")
+//	public int insertlargeobjectwithprovidefunc(testpojo person) {
+//		Connection conn = getConn();
+//		PreparedStatement pstmt;
+//		try {
+//			conn.setAutoCommit(false);
+//			LargeObjectManager lobj = ((com.highgo.jdbc.PGConnection) conn).getLargeObjectAPI();
+//			long oid = lobj.createLO(LargeObjectManager.READ
+//					| LargeObjectManager.WRITE);
+//			LargeObject obj = lobj.open(oid, LargeObjectManager.WRITE);
+//			FileInputStream fis = new FileInputStream("D:/1.txt");
+//			byte buf[] = new byte[2048];
+//			int s, tl = 0;
+//			while ((s = fis.read(buf, 0, 2048)) > 0) {
+//				obj.write(buf, 0, s);
+//				tl += s;
+//			}
+//			obj.close();
+//			String sql = "insert into largeobjectoid (id,obj) values(?,?)";
+//			int i = 0;
+//			pstmt = (PreparedStatement) conn.prepareStatement(sql);
+//			pstmt.setInt(1, person.getId());
+//			pstmt.setLong(2, oid);
+//			i = pstmt.executeUpdate();
+//			conn.commit();
+//			pstmt.close();
+//			conn.close();
+//			System.out.println("end" + i);
+//			return i;
+//		} catch (SQLException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		} catch (FileNotFoundException e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		} finally {
+//			return 0;
+//		}
+//
+//	}
 
 	public void getBlob() {
 		Connection conn = getConn();
@@ -501,6 +539,57 @@ public class Test {
 		}
 	}
 	
+	public static void testSlowAppear(){
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			conn = getConn5();
+			int limit = 50000;
+			long executeStartTine = System.currentTimeMillis();
+			String sql = "		SELECT ctid,md5(CASE WHEN fileid IS NULL THEN '' ELSE md5(fileid) end||CASE WHEN filename IS NULL THEN '' ELSE md5(filename) end||CASE WHEN filesuffix IS NULL THEN '' ELSE md5(filesuffix) end||CASE WHEN filepath IS NULL THEN '' ELSE md5(filepath) end||CASE WHEN filesize IS NULL THEN '' ELSE md5(filesize) end||CASE WHEN strategyid IS NULL THEN '' ELSE md5(strategyid) end||CASE WHEN busiid IS NULL THEN '' ELSE md5(busiid) end||CASE WHEN busitype IS NULL THEN '' ELSE md5(busitype) end||CASE WHEN ordercode IS NULL THEN '' ELSE md5(concat(ordercode,'')) end||CASE WHEN status IS NULL THEN '' ELSE md5(concat(status,'')) end||CASE WHEN uploadtime IS NULL THEN '' ELSE md5(uploadtime) end||CASE WHEN createuserid IS NULL THEN '' ELSE md5(createuserid) end||CASE WHEN servertype IS NULL THEN '' ELSE md5(concat(servertype,'')) end||CASE WHEN filedata IS NULL THEN '' ELSE md5(filedata) end||CASE WHEN version IS NULL THEN '' ELSE md5(concat(version,'')) end||CASE WHEN isencryption IS NULL THEN '' ELSE md5(concat(isencryption,'')) end||CASE WHEN iscompression IS NULL THEN '' ELSE md5(concat(iscompression,'')) end||CASE WHEN filelabel IS NULL THEN '' ELSE md5(filelabel) end||CASE WHEN hisversion IS NULL THEN '' ELSE md5(concat(hisversion,'')) end||CASE WHEN printnum IS NULL THEN '' ELSE md5(concat(printnum,'')) end||CASE WHEN indexflag IS NULL THEN '' ELSE md5(concat(indexflag,'')) end) as value FROM lcicbc9999.hqoa_t_file2 limit " + limit;
+			ps = conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			System.out.println("execute end. 耗时:" + (System.currentTimeMillis() - executeStartTine) + "ms");
+			long executeEndTime = System.currentTimeMillis();
+			while(rs.next()){
+				System.out.println(rs.getString("ctid") + "\t|" + rs.getString("VALUE"));
+			}
+			System.out.println("print end.");
+			System.out.println(System.currentTimeMillis() - executeEndTime + "ms");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			if(rs != null){
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(ps != null){
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
+	}
+	
 	public static void main(String[] args) throws Exception {
 		/*
 		 * // TODO Auto-generated method stub Driver driver = new Driver();
@@ -525,7 +614,8 @@ public class Test {
 		// test.getlong();
 		//test.callProcedure();
 //		test.getBpChar();
-		test.createTable();
+//		test.createTable();
+		testSlowAppear();
 		
 
 //		Connection conn = getConn();
