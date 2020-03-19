@@ -1,4 +1,4 @@
-package Fnlo.Test.JDBC;
+package work.temp;
 
 import java.sql.Blob;
 

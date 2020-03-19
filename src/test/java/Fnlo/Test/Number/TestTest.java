@@ -8,14 +8,6 @@ import org.junit.Test;
 
 public class TestTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
-
 	@Test
 	public void testGetScale() {
 		assertEquals(0, Fnlo.Test.Number.Test.getScale(1310732));

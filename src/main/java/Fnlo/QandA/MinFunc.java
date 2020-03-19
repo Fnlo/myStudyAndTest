@@ -12,9 +12,10 @@ public class MinFunc {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Integer[] integerArray = new Integer[]{0, 1, 2, 3, -1};
-		System.out.println(MinFunc.min(integerArray));
-		 
+//		Integer[] integerArray = new Integer[]{0, 1, 2, 3, -1};
+//		System.out.println(MinFunc.min(integerArray));
+		 System.out.println((byte) 21128);
+		 System.out.println((byte) 20872);
 		 
 	}
 
@@ -24,7 +25,7 @@ public class MinFunc {
 			return null;
 		}
 		T min = array[0];
-		for(T obj : array){
+		for(T obj : array){ 
 //			(min.compareTo(obj) >= 0) ? (min = obj) : (min = min);
 			if(min.compareTo(obj) >= 0){
 				min = obj;
